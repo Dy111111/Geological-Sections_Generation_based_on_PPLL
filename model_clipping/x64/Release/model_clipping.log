@@ -1,0 +1,89 @@
+﻿  Camera.cpp
+  FirstPersonControls.cpp
+D:\model_clipping\camera\FirstPersonControls.h(14,20): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“camera/FirstPersonControls.cpp”)
+  
+D:\model_clipping\camera\FirstPersonControls.h(23,22): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“camera/FirstPersonControls.cpp”)
+  
+D:\model_clipping\camera\FirstPersonControls.cpp(24,28): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\model_clipping\camera\FirstPersonControls.cpp(26,24): warning C4244: “-=”: 从“double”转换到“float”，可能丢失数据
+D:\model_clipping\camera\FirstPersonControls.cpp(27,42): warning C4244: “-=”: 从“double”转换到“float”，可能丢失数据
+D:\model_clipping\camera\FirstPersonControls.cpp(28,12): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\model_clipping\camera\FirstPersonControls.cpp(33,27): warning C4305: “参数”: 从“double”到“float”截断
+  TrackballControls.cpp
+D:\model_clipping\camera\TrackballControls.h(24,20): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“camera/TrackballControls.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(25,19): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“camera/TrackballControls.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(27,59): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  (编译源文件“camera/TrackballControls.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(29,54): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  (编译源文件“camera/TrackballControls.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(30,31): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“camera/TrackballControls.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(36,20): warning C4305: “初始化”: 从“double”到“const float”截断
+  (编译源文件“camera/TrackballControls.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.cpp(8,17): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+D:\model_clipping\camera\TrackballControls.cpp(9,16): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+D:\model_clipping\camera\TrackballControls.cpp(89,17): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+D:\model_clipping\camera\TrackballControls.cpp(90,16): warning C4244: “=”: 从“int”转换到“float”，可能丢失数据
+D:\model_clipping\camera\TrackballControls.cpp(188,21): warning C4244: “*=”: 从“double”转换到“float”，可能丢失数据
+D:\model_clipping\camera\TrackballControls.cpp(199,12): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+D:\model_clipping\camera\TrackballControls.cpp(271,26): warning C4244: “-=”: 从“double”转换到“T”，可能丢失数据
+D:\model_clipping\camera\TrackballControls.cpp(271,26): warning C4244:         with
+D:\model_clipping\camera\TrackballControls.cpp(271,26): warning C4244:         [
+D:\model_clipping\camera\TrackballControls.cpp(271,26): warning C4244:             T=float
+D:\model_clipping\camera\TrackballControls.cpp(271,26): warning C4244:         ]
+  LoadShaders.cpp
+D:\Software\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.39.33519\include\filesystem(12): warning STL4038: The contents of <filesystem> are available only with C++17 or later.
+  main.cpp
+D:\model_clipping\camera\TrackballControls.h(24,20): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“main.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(25,19): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“main.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(27,59): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  (编译源文件“main.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(29,54): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  (编译源文件“main.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(30,31): warning C4305: “初始化”: 从“double”到“float”截断
+  (编译源文件“main.cpp”)
+  
+D:\model_clipping\camera\TrackballControls.h(36,20): warning C4305: “初始化”: 从“double”到“const float”截断
+  (编译源文件“main.cpp”)
+  
+D:\model_clipping\utils\filesystem.h(4,1): warning C4005: “_CRT_SECURE_NO_WARNINGS”: 宏重定义
+  (编译源文件“main.cpp”)
+  D:\model_clipping\utils\filesystem.h(4,1):
+  之前在命令行上声明的“_CRT_SECURE_NO_WARNINGS”
+  
+D:\model_clipping\main.cpp(282,55): warning C4305: “参数”: 从“double”到“GLfloat”截断
+D:\model_clipping\main.cpp(282,51): warning C4305: “参数”: 从“double”到“GLfloat”截断
+D:\model_clipping\main.cpp(282,47): warning C4305: “参数”: 从“double”到“GLfloat”截断
+D:\model_clipping\main.cpp(287,47): warning C4305: “参数”: 从“double”到“GLfloat”截断
+LINK : warning LNK4098: 默认库“LIBCMT”与其他库的使用冲突；请使用 /NODEFAULTLIB:library
+  正在生成代码
+  Previous IPDB not found, fall back to full compilation.
+  All 767 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  已完成代码的生成
+glew32s.lib(glew.obj) : warning LNK4099: 未找到 PDB“”(使用“glew32s.lib(glew.obj)”或在“”中寻找)；正在链接对象，如同没有调试信息一样
+LINK : warning LNK4286: 符号“__glewLinkProgram”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewDeleteShader”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewShaderSource”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewAttachShader”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewGetProgramiv”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewCreateProgram”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewCreateShader”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewCompileShader”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+LINK : warning LNK4286: 符号“__glewGetShaderiv”(在“glew32s.lib(glew.obj)”中定义)已由“LoadShaders.obj”导入
+  model_clipping.vcxproj -> D:\model_clipping\x64\Release\model_clipping.exe

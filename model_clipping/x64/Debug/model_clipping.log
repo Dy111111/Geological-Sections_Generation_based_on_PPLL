@@ -1,0 +1,16 @@
+﻿  main.cpp
+E:\Ex\Final Work\added\model_clipping\camera\TrackballControls.h(26,18): warning C4305: “初始化”: 从“double”到“float”截断
+E:\Ex\Final Work\added\model_clipping\camera\TrackballControls.h(27,17): warning C4305: “初始化”: 从“double”到“float”截断
+E:\Ex\Final Work\added\model_clipping\camera\TrackballControls.h(29,59): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+E:\Ex\Final Work\added\model_clipping\camera\TrackballControls.h(31,54): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+E:\Ex\Final Work\added\model_clipping\camera\TrackballControls.h(32,29): warning C4305: “初始化”: 从“double”到“float”截断
+E:\Ex\Final Work\added\model_clipping\camera\TrackballControls.h(38,18): warning C4305: “初始化”: 从“double”到“const float”截断
+E:\Ex\Final Work\added\model_clipping\utils\filesystem.h(4,1): warning C4005: “_CRT_SECURE_NO_WARNINGS”: 宏重定义
+E:\Ex\Final Work\added\model_clipping\utils\filesystem.h(4,1): message : 之前在命令行上声明的“_CRT_SECURE_NO_WARNINGS”
+E:\Ex\Final Work\added\model_clipping\main.cpp(294,58): warning C4305: “参数”: 从“double”到“GLfloat”截断
+E:\Ex\Final Work\added\model_clipping\main.cpp(299,50): warning C4305: “参数”: 从“double”到“GLfloat”截断
+E:\Ex\Final Work\added\model_clipping\main.cpp(317,18): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+E:\Ex\Final Work\added\model_clipping\main.cpp(392,65): warning C4267: “参数”: 从“size_t”转换到“GLsizei”，可能丢失数据
+E:\Ex\Final Work\added\model_clipping\main.cpp(553,58): warning C4305: “参数”: 从“double”到“float”截断
+E:\Ex\Final Work\added\model_clipping\main.cpp(618,16): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+  model_clipping.vcxproj -> E:\Ex\Final Work\added\model_clipping\x64\Debug\model_clipping.exe
