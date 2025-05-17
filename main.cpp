@@ -20,8 +20,6 @@
 const int WIDTH = 1920;
 const int HEIGHT = 1080;
 
-int N = 1;
-int M = 1;
 // timing
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
@@ -71,11 +69,8 @@ struct
 	GLint projection_matrix;
 } render_plane_uniforms;
 
-// Program to sort
-GLuint sort_program;
 
-// Program to resolve 
-GLuint resolve_program;
+
 
 // Program to render clipping plane 
 GLuint render_plane;
@@ -90,7 +85,6 @@ GLint current_width;
 GLint current_height;
 
 Model geoModel(FileSystem::getPath("resources/model/geomodel/g1.obj"));
-//Model geoModel("D:/BaiduNetdiskDownload/data/data/geo4.obj");
 
 bool isLeftPress = false;
 bool notMoving = true;
@@ -120,27 +114,7 @@ void InitPrograms() {
 	render_scene_uniforms.model_matrix = glGetUniformLocation(render_scene_prog, "model");
 	render_scene_uniforms.view_matrix = glGetUniformLocation(render_scene_prog, "view");
 	render_scene_uniforms.projection_matrix = glGetUniformLocation(render_scene_prog, "projection");
-	//render_scene_uniforms.aspect = glGetUniformLocation(render_scene_prog, "aspect");
-	//render_scene_uniforms.time = glGetUniformLocation(render_scene_prog, "time");
-
-	ShaderInfo sort_shaders[] = {
-		{ GL_VERTEX_SHADER, "shaders/sort_list.vert" },
-		{ GL_FRAGMENT_SHADER, "shaders/sort_list.frag" },
-		{ GL_NONE }
-	};
-
-
-	sort_program = LoadShaders(sort_shaders);
 	
-
-	ShaderInfo resolve_shaders[] =
-	{
-		{ GL_VERTEX_SHADER, "shaders/resolve_lists.vs.glsl" },
-		{ GL_FRAGMENT_SHADER, "shaders/resolve_lists.fs.glsl" },
-		{ GL_NONE }
-	};
-
-	resolve_program = LoadShaders(resolve_shaders);
 	ShaderInfo plane_shaders[] = {
 		{ GL_VERTEX_SHADER, "shaders/plane.vert" },
 		{ GL_FRAGMENT_SHADER, "shaders/plane.frag" },
@@ -155,12 +129,12 @@ void InitPrograms() {
 }
 
 void Initialize() {
-	GLuint* data;//¾Ö²¿±äÁ¿
+	GLuint* data;//ï¿½Ö²ï¿½ï¿½ï¿½ï¿½ï¿½
 	render_scene_prog = -1;
 
-	InitPrograms();//³õÊ¼»¯×ÅÉ«Æ÷
+	InitPrograms();//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½
 
-	// ´´½¨Ò»¸ö2DÍ¼Ïñ£¬ÓÃÀ´´¢´æÖðÏñËØÁ´±íÖÐµÄheadÖ¸ÕëÐÅÏ¢
+	// ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½2DÍ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½headÖ¸ï¿½ï¿½ï¿½ï¿½Ï¢
 	glActiveTexture(GL_TEXTURE0);
 	glGenTextures(1, &head_pointer_texture);
 	glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
@@ -171,7 +145,7 @@ void Initialize() {
 
 	glBindImageTexture(0, head_pointer_texture, 0, GL_TRUE, 0, GL_READ_WRITE, GL_R32UI);
 
-	// ´´½¨»º´æÓÃÓÚ¿½±´£¬ÒÔÖØÐÂ³õÊ¼»¯headÖ¸Õë
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â³ï¿½Ê¼ï¿½ï¿½headÖ¸ï¿½ï¿½
 	glGenBuffers(1, &head_pointer_clear_buffer);
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_clear_buffer);
 	glBufferData(GL_PIXEL_UNPACK_BUFFER, MAX_FRAMEBUFFER_WIDTH * MAX_FRAMEBUFFER_HEIGHT * sizeof(GLuint), NULL, GL_STATIC_DRAW);
@@ -181,25 +155,11 @@ void Initialize() {
 
 	glGenBuffers(1, &testbuffer);
 	
-	// ´´½¨Ô­×Ó¼ÆÊýÆ÷»º´æ
+	// ï¿½ï¿½ï¿½ï¿½Ô­ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	glGenBuffers(1, &atomic_counter_buffer);
 	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomic_counter_buffer);
 	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
 
-	
-	//// ´´½¨Ò»¸ö½Ï´óµÄÒ»Î¬»º´æÀ´´¢´æÆ¬ÔªÊý¾Ý
-	//glGenBuffers(1, &linked_list_buffer);
-	//glBindBuffer(GL_TEXTURE_BUFFER, linked_list_buffer);
-	//glBufferData(GL_TEXTURE_BUFFER, MAX_FRAMEBUFFER_WIDTH * MAX_FRAMEBUFFER_HEIGHT * 4 * sizeof(glm::vec2), NULL, GL_DYNAMIC_COPY);
-	//glBindBuffer(GL_TEXTURE_BUFFER, 0);
-
-	//// Bind it to a texture (for use as a TBO)
-	//glGenTextures(1, &linked_list_texture);
-	//glBindTexture(GL_TEXTURE_BUFFER, linked_list_texture);
-	//glTexBuffer(GL_TEXTURE_BUFFER, GL_RG32UI, linked_list_buffer);
-	//glBindTexture(GL_TEXTURE_BUFFER, 0);
-
-	//glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RG32UI);
 	glGenBuffers(1, &linked_list_buffer);
 	maxNodes = 20 * WIDTH * HEIGHT;
 	GLint nodeSize = sizeof(GLfloat) + 2*sizeof(GLuint); // The size of a linked list node
@@ -251,28 +211,21 @@ void DrawPlane(float angle, glm::vec3 axis, glm::vec3 position) {
 	
 }
 
-void DrawQuad() {
-	glEnable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-	glBindVertexArray(quad_vao);
-	glUseProgram(sort_program);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-}
 
 void RenderGeoModel() {
 	GLuint* data;
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);         // ÆôÓÃÌÞ³ý
-	glCullFace(GL_BACK);            // ÌÞ³ý±³ÏòÃæ
+	glEnable(GL_CULL_FACE);         // ï¿½ï¿½ï¿½ï¿½ï¿½Þ³ï¿½
+	glCullFace(GL_BACK);            // ï¿½Þ³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-	// ½«Ô­×Ó¼ÆÊýÆ÷»º´æµÄ¼ÆÊýÖµÖØÖÃÎª0
+	// ï¿½ï¿½Ô­ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½Îª0
 	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomic_counter_buffer);
 	data = (GLuint*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_WRITE_ONLY);
 	data[0] = 0;
 	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 
-	// Çå³ý2DÍ¼Ïñ´æ´¢µÄheadÖ¸Õë
+	// ï¿½ï¿½ï¿½2DÍ¼ï¿½ï¿½æ´¢ï¿½ï¿½headÖ¸ï¿½ï¿½
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_clear_buffer);
 	glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
@@ -302,7 +255,7 @@ void RenderGeoModel() {
 	glUniformMatrix4fv(render_scene_uniforms.view_matrix, 1, GL_FALSE, &view_matrix[0][0]);
 	glUniformMatrix4fv(render_scene_uniforms.projection_matrix, 1, GL_FALSE, &projection_matrix[0][0]);
 	geoModel.Draw(render_scene_prog);
-	glEnable(GL_CULL_FACE);         // ÆôÓÃÌÞ³ý
+	glEnable(GL_CULL_FACE);         // ï¿½ï¿½ï¿½ï¿½ï¿½Þ³ï¿½
 	glCullFace(GL_FRONT);
 	glUniform1ui(render_scene_uniforms.side, 2);
 	geoModel.Draw(render_scene_prog);
@@ -317,13 +270,13 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 	float angleStep = 2.0f * M_PI / subdivisions;
 	float halfHeight = height / 2.0f;
 
-	// Éú³É¶¥µãÊý¾Ý
+	// ï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i <= subdivisions; ++i) {
 		float angle = i * angleStep;
 		float x = radius * cos(angle);
 		float z = radius * sin(angle);
 
-		// ¶¥Ãæ
+		// ï¿½ï¿½ï¿½ï¿½
 		vertices.push_back(x);
 		vertices.push_back(halfHeight);
 		vertices.push_back(z);
@@ -331,7 +284,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 		vertices.push_back(1.0f);
 		vertices.push_back(0.0f);
 
-		// µ×Ãæ
+		// ï¿½ï¿½ï¿½ï¿½
 		vertices.push_back(x);
 		vertices.push_back(-halfHeight);
 		vertices.push_back(z);
@@ -350,7 +303,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 		indices.push_back(start + 2);
 	}
 
-	// Éú³ÉVBO¡¢VAO
+	// ï¿½ï¿½ï¿½ï¿½VBOï¿½ï¿½VAO
 	GLuint VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -364,7 +317,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-	// ÉèÖÃ¶¥µãÊôÐÔ
+	// ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -372,7 +325,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 
 	glBindVertexArray(0);
 
-	// »æÖÆÔ²Öù
+	// ï¿½ï¿½ï¿½ï¿½Ô²ï¿½ï¿½
 
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -392,77 +345,12 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	// ÇåÀí
+	// ï¿½ï¿½ï¿½ï¿½
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 }
-void Display() {
 
-	/*float t;
-
-	unsigned int current_time = app_time();
-
-	t = (float)(current_time & 0xFFFFF) / (float)0x3FFF;*/
-
-	GLuint* data;
-
-	glDisable(GL_DEPTH_TEST);
-	glDisable(GL_CULL_FACE);
-
-	glClearColor(0.39f, 0.58f, 0.92f, 0.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	// Reset atomic counter
-	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomic_counter_buffer);
-	data = (GLuint*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_WRITE_ONLY);
-	data[0] = 0;
-	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
-
-	// Clear head-pointer image
-	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_clear_buffer);
-	glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
-	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	// Bind head-pointer image for read-write
-	glBindImageTexture(0, head_pointer_texture, 0, GL_FALSE, 0, GL_READ_WRITE, GL_R32UI);
-
-	// Bind linked-list buffer for write
-	glBindImageTexture(1, linked_list_texture, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RG32UI);
-
-	//object.Render(0, 8 * 8 * 8);
-
-
-	/*glDisable(GL_BLEND);
-
-	glBindVertexArray(quad_vao);
-	glUseProgram(resolve_program);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);*/
-}
-
-
-
-void stencilRecord()
-{
-	glClear(GL_STENCIL_BUFFER_BIT);
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_ALWAYS, 1, 1);
-	glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-}
-
-void stencilMask()
-{
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_EQUAL, 1, 1);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-}
-
-void stencilOff()
-{
-	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-	glDisable(GL_STENCIL_TEST);
-}
 
 
 void Finalize() {
@@ -475,7 +363,7 @@ void Finalize() {
 void Resize() {
 
 }
-#pragma region ´°¿Ú»Øµ÷º¯Êý
+#pragma region ï¿½ï¿½ï¿½Ú»Øµï¿½ï¿½ï¿½ï¿½ï¿½
 void OnResize(GLFWwindow* window, int w, int h) {
 	//firstpersonControls->OnResize(window, w, h);
 	trackballControls->OnResize(window, w, h);
@@ -500,18 +388,7 @@ void glfw_cursor_pos_callback(GLFWwindow* window, double x, double y) {
 	
 }
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-		if (key == GLFW_KEY_W) {
-			N++;
-			M++;
-			std::cout << "W pressed. Value: " << N << std::endl;
-		}
-		if (key == GLFW_KEY_S) {
-			N--;
-			M--;
-			std::cout << "S pressed. Value: " << N << std::endl;
-		}
-	}
+	
 	//firstpersonControls->glfw_key_callback(window, key, scancode, action, mods);
 }
 #pragma endregion
@@ -529,7 +406,7 @@ int main() {
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	//³õÊ¼»¯GLEW
+	//ï¿½ï¿½Ê¼ï¿½ï¿½GLEW
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK)
 	{
@@ -574,65 +451,25 @@ int main() {
 		sum += deltaTime;
 		i++;
 		if (i % 100 == 0) {
-			cout << "Ö¡ÂÊÎª£º" << 100.0/sum << endl;
+			cout << "Ö¡ï¿½ï¿½Îªï¿½ï¿½" << 100.0/sum << endl;
 			//cout << camera->position.x << "," << camera->position.y << "," << camera->position.z << endl;
 			sum = 0;
 		}
 
-
-		
 		glClearColor(0.73f, 0.73f, 0.73f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		//°´ÕÕ»®·ÖÊýÁ¿·Ö¿é
-		//int BLOCK_WIDTH = WIDTH / N;
-		//int BLOCK_HEIGHT = HEIGHT / M;
-		//for (int i = 0; i < M; ++i) {
-		//	for (int j = 0; j < N; ++j) {
-		//		// ÉèÖÃµ±Ç°¿éµÄÎ»ÖÃ
-		//		int x = j * BLOCK_WIDTH;
-		//		int y = i * BLOCK_HEIGHT;
+		RenderGeoModel();//Ð´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î¬Ä£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
-		//		// ÆôÓÃ²Ã¼ô´°¿Ú
-		//		glEnable(GL_SCISSOR_TEST);
-		//		glScissor(x, y, BLOCK_WIDTH, BLOCK_HEIGHT);
-		//		RenderGeoModel();
-		//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//		int clipnum = 2;
-		//		float inter = 62.0 / clipnum;
-		//		//stencilMask();
-		//		for (float i = -30; i < 32; i += inter)
-		//		{
-		//			DrawPlane(0.0, glm::vec3(1, 0, 0), glm::vec3(0, 0, i));
-
-		//		}
-		//		
-		//	}
-		//}
-
-
-		//stencilRecord();
-		RenderGeoModel();
-		
-			int clipnum = 6;
-			float inter = 62.0 / clipnum;
-			//stencilMask();
-			for (float i = -30; i < 32; i += inter)
-			{
-				DrawPlane(0.0, glm::vec3(1, 0, 0), glm::vec3(0, 0, i));
-				
-			}
-	//drawCylinder(render_plane, 10, 50, 16);
-		//DrawQuad();
-		//DrawPlane(0.0, glm::vec3(1, 0, 0), glm::vec3(0, 0, 0));
-		
-		//for (int i = -30; i < 32; i += 8)
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		int clipnum = 6;
+		float inter = 62.0 / clipnum;
+		for (float i = -30; i < 32; i += inter)
 		{
-			//DrawPlane(90.0, glm::vec3(0, 1, 0), glm::vec3(i, 0, 0));
+			DrawPlane(0.0, glm::vec3(1, 0, 0), glm::vec3(0, 0, i));
+				
 		}
-		
 		glfwSwapBuffers(window);
-		
 		glfwPollEvents();
 	}
 	
