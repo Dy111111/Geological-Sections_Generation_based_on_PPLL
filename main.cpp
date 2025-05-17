@@ -27,7 +27,7 @@ float lastFrame = 0.0f;
 Camera* camera;
 TrackballControls* trackballControls;
 
-std::vector<float> ini(1280*720,1.0f);
+std::vector<float> ini(1280 * 720, 1.0f);
 // Member variables
 float aspect;
 
@@ -114,7 +114,7 @@ void InitPrograms() {
 	render_scene_uniforms.model_matrix = glGetUniformLocation(render_scene_prog, "model");
 	render_scene_uniforms.view_matrix = glGetUniformLocation(render_scene_prog, "view");
 	render_scene_uniforms.projection_matrix = glGetUniformLocation(render_scene_prog, "projection");
-	
+
 	ShaderInfo plane_shaders[] = {
 		{ GL_VERTEX_SHADER, "shaders/plane.vert" },
 		{ GL_FRAGMENT_SHADER, "shaders/plane.frag" },
@@ -129,12 +129,12 @@ void InitPrograms() {
 }
 
 void Initialize() {
-	GLuint* data;//�ֲ�����
+	GLuint* data;//局部变量
 	render_scene_prog = -1;
 
-	InitPrograms();//��ʼ����ɫ��
+	InitPrograms();//初始化着色器
 
-	// ����һ��2Dͼ���������������������е�headָ����Ϣ
+	// 创建一个2D图像，用来储存逐像素链表中的head指针信息
 	glActiveTexture(GL_TEXTURE0);
 	glGenTextures(1, &head_pointer_texture);
 	glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
@@ -145,7 +145,7 @@ void Initialize() {
 
 	glBindImageTexture(0, head_pointer_texture, 0, GL_TRUE, 0, GL_READ_WRITE, GL_R32UI);
 
-	// �����������ڿ����������³�ʼ��headָ��
+	// 创建缓存用于拷贝，以重新初始化head指针
 	glGenBuffers(1, &head_pointer_clear_buffer);
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_clear_buffer);
 	glBufferData(GL_PIXEL_UNPACK_BUFFER, MAX_FRAMEBUFFER_WIDTH * MAX_FRAMEBUFFER_HEIGHT * sizeof(GLuint), NULL, GL_STATIC_DRAW);
@@ -154,15 +154,15 @@ void Initialize() {
 	glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 
 	glGenBuffers(1, &testbuffer);
-	
-	// ����ԭ�Ӽ���������
+
+	// 创建原子计数器缓存
 	glGenBuffers(1, &atomic_counter_buffer);
 	glBindBuffer(GL_ATOMIC_COUNTER_BUFFER, atomic_counter_buffer);
 	glBufferData(GL_ATOMIC_COUNTER_BUFFER, sizeof(GLuint), NULL, GL_DYNAMIC_COPY);
 
 	glGenBuffers(1, &linked_list_buffer);
 	maxNodes = 20 * WIDTH * HEIGHT;
-	GLint nodeSize = sizeof(GLfloat) + 2*sizeof(GLuint); // The size of a linked list node
+	GLint nodeSize = sizeof(GLfloat) + 2 * sizeof(GLuint); // The size of a linked list node
 	glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, linked_list_buffer);
 	glBufferData(GL_SHADER_STORAGE_BUFFER, maxNodes * nodeSize, NULL, GL_DYNAMIC_DRAW);
 
@@ -195,7 +195,7 @@ void DrawPlane(float angle, glm::vec3 axis, glm::vec3 position) {
 	glUseProgram(render_plane);
 	glm::mat4 model_matrix = glm::mat4(1.0f);
 	model_matrix = glm::translate(model_matrix, position);
-	
+
 	model_matrix = glm::rotate(model_matrix, glm::radians(angle), axis);
 	model_matrix = glm::scale(model_matrix, glm::vec3(150.0, 150.0, 150.0));
 
@@ -208,7 +208,7 @@ void DrawPlane(float angle, glm::vec3 axis, glm::vec3 position) {
 	glUniformMatrix4fv(render_plane_uniforms.view_matrix, 1, GL_FALSE, &view_matrix[0][0]);
 	glUniformMatrix4fv(render_plane_uniforms.projection_matrix, 1, GL_FALSE, &projection_matrix[0][0]);
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	
+
 }
 
 
@@ -216,16 +216,16 @@ void RenderGeoModel() {
 	GLuint* data;
 	glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
 	glDisable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);         // �����޳�
-	glCullFace(GL_BACK);            // �޳�������
+	glEnable(GL_CULL_FACE);         // 启用剔除
+	glCullFace(GL_BACK);            // 剔除背向面
 
-	// ��ԭ�Ӽ���������ļ���ֵ����Ϊ0
+	// 将原子计数器缓存的计数值重置为0
 	glBindBufferBase(GL_ATOMIC_COUNTER_BUFFER, 0, atomic_counter_buffer);
 	data = (GLuint*)glMapBuffer(GL_ATOMIC_COUNTER_BUFFER, GL_WRITE_ONLY);
 	data[0] = 0;
 	glUnmapBuffer(GL_ATOMIC_COUNTER_BUFFER);
 
-	// ���2Dͼ��洢��headָ��
+	// 清除2D图像存储的head指针
 	glBindBuffer(GL_PIXEL_UNPACK_BUFFER, head_pointer_clear_buffer);
 	glBindTexture(GL_TEXTURE_2D, head_pointer_texture);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, WIDTH, HEIGHT, GL_RED_INTEGER, GL_UNSIGNED_INT, NULL);
@@ -244,7 +244,7 @@ void RenderGeoModel() {
 	glUniform1ui(render_scene_uniforms.side, 1);
 	glUniform1f(render_scene_uniforms.shininess, 1.0);
 	glUniform3f(render_scene_uniforms.light + 0, 40.0, 90.0, -40.0);
-	glUniform3f(render_scene_uniforms.light + 1, 0.2,0.2,0.2);
+	glUniform3f(render_scene_uniforms.light + 1, 0.2, 0.2, 0.2);
 	glUniform3f(render_scene_uniforms.light + 2, 1.0, 1.0, 1.0);
 	glUniform3f(render_scene_uniforms.light + 3, 1.0, 1.0, 1.0);
 	glUniform1f(render_scene_uniforms.light + 4, 1.0);
@@ -255,7 +255,7 @@ void RenderGeoModel() {
 	glUniformMatrix4fv(render_scene_uniforms.view_matrix, 1, GL_FALSE, &view_matrix[0][0]);
 	glUniformMatrix4fv(render_scene_uniforms.projection_matrix, 1, GL_FALSE, &projection_matrix[0][0]);
 	geoModel.Draw(render_scene_prog);
-	glEnable(GL_CULL_FACE);         // �����޳�
+	glEnable(GL_CULL_FACE);         // 启用剔除
 	glCullFace(GL_FRONT);
 	glUniform1ui(render_scene_uniforms.side, 2);
 	geoModel.Draw(render_scene_prog);
@@ -270,13 +270,13 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 	float angleStep = 2.0f * M_PI / subdivisions;
 	float halfHeight = height / 2.0f;
 
-	// ���ɶ�������
+	// 生成顶点数据
 	for (int i = 0; i <= subdivisions; ++i) {
 		float angle = i * angleStep;
 		float x = radius * cos(angle);
 		float z = radius * sin(angle);
 
-		// ����
+		// 顶面
 		vertices.push_back(x);
 		vertices.push_back(halfHeight);
 		vertices.push_back(z);
@@ -284,7 +284,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 		vertices.push_back(1.0f);
 		vertices.push_back(0.0f);
 
-		// ����
+		// 底面
 		vertices.push_back(x);
 		vertices.push_back(-halfHeight);
 		vertices.push_back(z);
@@ -303,7 +303,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 		indices.push_back(start + 2);
 	}
 
-	// ����VBO��VAO
+	// 生成VBO、VAO
 	GLuint VBO, VAO, EBO;
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -317,7 +317,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-	// ���ö�������
+	// 设置顶点属性
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
@@ -325,7 +325,7 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 
 	glBindVertexArray(0);
 
-	// ����Բ��
+	// 绘制圆柱
 
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_CULL_FACE);
@@ -339,13 +339,13 @@ void drawCylinder(GLuint shaderProgram, float radius, float height, int subdivis
 	glUniformMatrix4fv(render_plane_uniforms.model_matrix, 1, GL_FALSE, &model_matrix[0][0]);
 	glUniformMatrix4fv(render_plane_uniforms.view_matrix, 1, GL_FALSE, &view_matrix[0][0]);
 	glUniformMatrix4fv(render_plane_uniforms.projection_matrix, 1, GL_FALSE, &projection_matrix[0][0]);
-	
+
 	glBindVertexArray(VAO);
 	glUseProgram(shaderProgram);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	// ����
+	// 清理
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
@@ -363,7 +363,7 @@ void Finalize() {
 void Resize() {
 
 }
-#pragma region ���ڻص�����
+#pragma region 窗口回调函数
 void OnResize(GLFWwindow* window, int w, int h) {
 	//firstpersonControls->OnResize(window, w, h);
 	trackballControls->OnResize(window, w, h);
@@ -371,8 +371,8 @@ void OnResize(GLFWwindow* window, int w, int h) {
 void glfw_mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
 	//firstpersonControls->glfw_mouse_button_callback(window, button, action, mods);
 	trackballControls->glfw_mouse_button_callback(window, button, action, mods);
-	
-	
+
+
 
 }
 void glfw_scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
@@ -385,10 +385,10 @@ void glfw_keyboard_input_callback(GLFWwindow* window) {
 void glfw_cursor_pos_callback(GLFWwindow* window, double x, double y) {
 	//firstpersonControls->glfw_cursor_pos_callback(window, x, y);
 	trackballControls->glfw_cursor_pos_callback(window, x, y);
-	
+
 }
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	
+
 	//firstpersonControls->glfw_key_callback(window, key, scancode, action, mods);
 }
 #pragma endregion
@@ -406,7 +406,7 @@ int main() {
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	//��ʼ��GLEW
+	//初始化GLEW
 	glewExperimental = true;
 	if (glewInit() != GLEW_OK)
 	{
@@ -420,18 +420,18 @@ int main() {
 	glfwSetCursorPosCallback(window, glfw_cursor_pos_callback);
 	glfwSetKeyCallback(window, glfw_key_callback);
 	glViewport(0, 0, WIDTH, HEIGHT);
-	
+
 	Initialize();
 	geoModel.loadModel();
 	//glEnable(GL_DEPTH_TEST);
-	
+
 	glfwSwapInterval(0);
 
 	camera = new Camera(45, float(WIDTH) / HEIGHT, 0.1, 500);
 
-	camera->position = glm::vec3(-106.878,15.6936,-21.9251);//
+	camera->position = glm::vec3(-106.878, 15.6936, -21.9251);//
 	//camera->position = glm::vec3(-59.2229, 5.22017, -7.64021);
-	
+
 	camera->lookAt(glm::vec3(0, 0, 0));
 	//firstpersonControls=new FirstPersonControls(camera,window);
 	trackballControls = new TrackballControls(camera, window);
@@ -451,28 +451,28 @@ int main() {
 		sum += deltaTime;
 		i++;
 		if (i % 100 == 0) {
-			cout << "֡��Ϊ��" << 100.0/sum << endl;
+			cout << "帧率为：" << 100.0 / sum << endl;
 			//cout << camera->position.x << "," << camera->position.y << "," << camera->position.z << endl;
 			sum = 0;
 		}
 
 		glClearColor(0.73f, 0.73f, 0.73f, 0.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		RenderGeoModel();//д���������άģ����������
 
-		//��������������������
+		RenderGeoModel();//Write geo model info to PPLL
+
+		// Use PPLL to render planes
 		int clipnum = 6;
 		float inter = 62.0 / clipnum;
 		for (float i = -30; i < 32; i += inter)
 		{
 			DrawPlane(0.0, glm::vec3(1, 0, 0), glm::vec3(0, 0, i));
-				
+
 		}
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	
+
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	Finalize();
